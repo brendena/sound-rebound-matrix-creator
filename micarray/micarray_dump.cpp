@@ -2,7 +2,6 @@
  * Copyright 2016 <Admobilize>
  * All rights reserved.
  */
-
 #include <wiringPi.h>
 
 #include <string>
@@ -14,6 +13,8 @@
 #include <matrix_hal/everloop.h>
 #include <matrix_hal/microphone_array.h>
 #include <matrix_hal/wishbone_bus.h>
+
+#include "./libmfcc/libmfcc.h"
 
 
 
@@ -44,7 +45,7 @@ int main() {
 
   uint16_t seconds_to_record = 6;
 
-  int16_t buffer[mics.Channels()][seconds_to_record * mics.SamplingRate()];
+  double buffer[mics.Channels()][seconds_to_record * mics.SamplingRate()];
 
   uint32_t step = 0;
 
@@ -67,16 +68,27 @@ int main() {
   }
 
   uint16_t c = 0;
+  /*
   std::cout.write((const char*)buffer[c],
                   seconds_to_record * mics.SamplingRate() * sizeof(int16_t));
-
+  
   std::cout.flush();
-
+	*/
   for (auto& led : image1d.leds) {
     led.red = 0;
     led.green = 0;
   }
   everloop.Write(&image1d);
+  
+  double mfcc_result;
+  
+  for(unsigned int coeff = 0; coeff < 13; coeff++){
+		mfcc_result = GetCoefficient(buffer[0],44100,48,128, coeff);
+		std::printf("%i %f\n", coeff, mfcc_result);
+	}
+std::cout.flush();
+	
+  
   
   digitalWrite(13, LOW);
   digitalWrite(5, LOW);
