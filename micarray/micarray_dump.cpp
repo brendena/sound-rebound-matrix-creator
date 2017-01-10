@@ -51,7 +51,7 @@ int main() {
 
   for (auto& led : image1d.leds) {
     led.blue = 0;
-    led.red = 10;
+    led.red = 3;
   }
   everloop.Write(&image1d);
 
@@ -79,12 +79,13 @@ int main() {
     led.green = 0;
   }
   everloop.Write(&image1d);
-  
+  /*sending data over cout
+	where python will convert
+ these strings into list*/
   double mfcc_result;
-  
   for(unsigned int coeff = 0; coeff < 13; coeff++){
 		mfcc_result = GetCoefficient(buffer[0],44100,48,128, coeff);
-		std::printf("%i %f\n", coeff, mfcc_result);
+		std::printf("%f , ", mfcc_result);
 	}
 std::cout.flush();
 	
