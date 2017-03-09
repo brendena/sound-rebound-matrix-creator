@@ -13,35 +13,31 @@
 #include <matrix_hal/everloop.h>
 #include <matrix_hal/microphone_array.h>
 #include <matrix_hal/wishbone_bus.h>
-
+#include <stdlib.h>
 #include "./libmfcc/libmfcc.h"
 
 
 
 namespace hal = matrix_hal;
 
-int main() {
+int main(int argc, char *argv[]) {
   hal::WishboneBus* bus = new hal::WishboneBus();
   bus->SpiInit();
 
   hal::MicrophoneArray mics;
   mics.Setup(bus);
 
-
+/*
   pinMode(13, OUTPUT);
   pinMode(5, OUTPUT);
 
   digitalWrite(13, HIGH);
   digitalWrite(5, HIGH);
-
+*/
   hal::Everloop everloop;
   everloop.Setup(bus);
 
   hal::EverloopImage image1d;
-
-  for (auto& led : image1d.leds) led.blue = 10;
-
-  everloop.Write(&image1d);
 
   uint16_t seconds_to_record = 1;
 
@@ -49,9 +45,20 @@ int main() {
 
   uint32_t step = 0;
 
+  char * pEnd;
+  long red = 0;
+  long blue = 0;
+  long green = 0;
+  if(argc == 4){
+	red = strtol(argv[1],&pEnd,10);
+	blue = strtol(argv[2], &pEnd,10);
+	green = strtol(argv[3], &pEnd, 10);
+  }
+
   for (auto& led : image1d.leds) {
-    led.blue = 0;
-    led.red = 3;
+    led.blue = blue;
+    led.red = red;
+    led.green = green;
   }
   everloop.Write(&image1d);
 
@@ -77,6 +84,7 @@ int main() {
   for (auto& led : image1d.leds) {
     led.red = 0;
     led.green = 0;
+    led.blue = 0;
   }
   everloop.Write(&image1d);
   /*sending data over cout

@@ -7,7 +7,7 @@ Starting Point for this code was from [here](https://github.com/matrix-io/matrix
 technical description [here](https://github.com/brendena/sound-rebound-matrix-creator/blob/master/howThisWorks.md)
 
 ## install pip dependencies
-### there currently arn't any any.  But there will be.
+### there currently arn't any.  But there will be.
 sudo pip install -r requirements.txt
 
 
