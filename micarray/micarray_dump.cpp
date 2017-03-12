@@ -75,31 +75,38 @@ int main(int argc, char *argv[]) {
   }
 
   uint16_t c = 0;
-  /*
+  ///*
   std::cout.write((const char*)buffer[c],
                   seconds_to_record * mics.SamplingRate() * sizeof(int16_t));
   
   std::cout.flush();
-	*/
+	//*/
   for (auto& led : image1d.leds) {
     led.red = 0;
     led.green = 0;
     led.blue = 0;
   }
   everloop.Write(&image1d);
-  /*sending data over cout
-	where python will convert
- these strings into list*/
+  
+  /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /   sending data over cout
+	/   where python will convert
+  /   these strings into list
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
+  /*
   double mfcc_result;
   for(unsigned int coeff = 0; coeff < 13; coeff++){
 		mfcc_result = GetCoefficient(buffer[0],44100,48,128, coeff);
 		std::printf("%f , ", mfcc_result);
 	}
-std::cout.flush();
+  std::cout.flush();
+  */
+  
+
+  
 	
   
-  
-  digitalWrite(13, LOW);
-  digitalWrite(5, LOW);
   return 0;
 }

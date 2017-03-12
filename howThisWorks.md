@@ -31,3 +31,8 @@ then
 `std::cout.flush();`
 
 So you wright to stdout and then you flush it at the end to make sure all the values get outputed.
+
+
+
+### inspiration came from
+[alexa_demo](https://github.com/matrix-io/matrix-creator-alexa-voice-demo/blob/master)

@@ -15,5 +15,9 @@ sudo pip install -r requirements.txt
 cd ./micarray
 sudo bash ./make.sh
 
-##include c++ library
+## sync data
+
+rsync -avz -e ssh username@10.42.0.1:/home/brendena/Downloads/syncRPI ~/Downloads/syncRPI
+
+## include c++ library
 [Libmfcc](https://github.com/wirahayy/libmfcc)

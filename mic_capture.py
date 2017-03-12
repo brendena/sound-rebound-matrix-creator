@@ -4,6 +4,8 @@ import os
 import subprocess
 import multiprocessing
 import time
+import soundfile as sf
+import librosa
 
 # Setup
 path = os.path.realpath(__file__).rstrip(os.path.basename(__file__))
@@ -28,7 +30,7 @@ class producer(multiprocessing.Process):
 
         while(True):
             
-            for i in range(10):
+            for i in range(2):
                 print ("micArray_demp " + str(i))
                 if(self.queueGetNotificationColor.empty()):
                     process = subprocess.Popen(
@@ -38,12 +40,18 @@ class producer(multiprocessing.Process):
                     process = subprocess.Popen(
                         ['./micarray/build/micarray_dump', noifColor["red"], noifColor["blue"], noifColor["green"]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 audio, err = process.communicate()
-                #converts the string of mfcc values to
-                # a list of mfcc values
-                convert = audio.decode("utf-8") 
-                convert = eval(''.join(['[',   convert, ']']))
+                
+                '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                / converts the string of mfcc 
+                / values to a list of mfcc values
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
 
-                self.queueSetAudio.put(convert)
+
+                #print(audio)
+                #convert = audio.decode("utf-8") 
+                #convert = eval(''.join(['[',   convert, ']']))
+
+                self.queueSetAudio.put(audio)
             break;
             
             
@@ -64,7 +72,25 @@ class consumer(multiprocessing.Process):
             else :
                 item = self.queueGetAudio.get()
                 self.queueSetNotificationColor.put({'red': "34",'blue':"14", 'green':"5"})
-                print(item)
+
+                '''~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                /  sending over raw information 
+                /  so that raspberry pi can do 
+                /  so i can do some quick testing.
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'''
+                rf = open('./recording.raw', 'wb')
+                rf.write(item)
+                rf.close()
+                
+                data, samplerate = sf.read("./recording.raw", channels=1, samplerate=44100,
+                           subtype='FLOAT')
+                
+                mfccs = librosa.feature.mfcc(y=data, sr=samplerate,n_mfcc=20)
+
+
+
+                print(mfccs)
+
                 
 if __name__ == '__main__':
     toClassifiers = multiprocessing.Queue()
